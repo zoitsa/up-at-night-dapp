@@ -5,11 +5,17 @@
 </mat-toolbar>
 
 <div class="section mat-app-background">
-	<div *ngIf="!accountConnected else createOrg">
-		<app-connect (connect)="onConnect()"></app-connect>
+	<div *ngIf="!accountID">
+    <app-connect (connect)="onConnect()"></app-connect>
+  </div>
+  
+	<div *ngIf="accountID">
+		<div class="container">
+			<app-create-org (create)="onCreate($event)"></app-create-org>
+		</div>
+		<mat-divider></mat-divider>
+		<div class="container">
+			<app-get-org (get)="onGet($event)"></app-get-org>
+		</div>
 	</div>
-
-	<ng-template #createOrg>
-		<app-create-org (create)="onCreate()"></app-create-org>
-	</ng-template>
 </div>

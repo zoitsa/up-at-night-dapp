@@ -1,0 +1,12 @@
+<div class="form-container" [formGroup]="form">
+	<h3>Get an Organization</h3>
+
+	<div>
+		<mat-form-field appearance="outline">
+			<mat-label>ID</mat-label>
+			<input matInput type="text" placeholder="Name" formControlName="id"
+				placeholder="uint256 number...">
+		</mat-form-field>
+	</div>
+	<button mat-raised-button color="primary" [disabled]="!form.valid" (click)="Submit()">Submit</button>
+</div>

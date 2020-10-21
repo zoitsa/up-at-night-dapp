@@ -1,31 +1,26 @@
-<div class="form-container" [formGroup]="createOrganization">
+<div class="form-container" [formGroup]="form">
 	<h3>Create an Organization</h3>
 
 	<div>
 		<mat-form-field appearance="outline">
 			<mat-label>Name</mat-label>
-			<input 
-				matInput 
-				type="text" 
-				placeholder="Name"
-				formControlName="name"
-				placeholder="Columbus Animal Shelter..."
-			>
+			<input matInput type="text" placeholder="Name" formControlName="name"
+				placeholder="Columbus Animal Shelter...">
+		</mat-form-field>
+  </div>
+  <div>
+		<mat-form-field appearance="outline">
+			<mat-label>Wallet Address</mat-label>
+			<textarea matInput type="text" formControlName="walletAddress" placeholder="12345678...">
+		</textarea>
 		</mat-form-field>
 	</div>
-		
-<div>
-	<mat-form-field appearance="outline">
-		<mat-label>Wallet Address</mat-label>
-		<textarea 
-			matInput type="text" 
-			formControlName="address"
-			placeholder="12345678..."
-			>
+	<div>
+		<mat-form-field appearance="outline">
+			<mat-label>Token Address</mat-label>
+			<textarea matInput type="text" formControlName="tokenAddress" placeholder="12345678...">
 		</textarea>
-	</mat-form-field>
-</div>
-<button mat-raised-button color="primary" (click)="Submit()">Submit</button>
-
-		
+		</mat-form-field>
+	</div>
+	<button mat-raised-button color="primary" [disabled]="!form.valid" (click)="Submit()">Submit</button>
 </div>

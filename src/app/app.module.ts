@@ -14,6 +14,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule, MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatDividerModule } from '@angular/material/divider';
+
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './reducers';
+import { EffectsModule } from '@ngrx/effects';
+import * as fromUser from './reducers/user.reducer';
+import { UserEffects } from './effects/user.effects';
+import * as fromOrganization from './reducers/organization.reducer';
+import { OrganizationEffects } from './effects/organization.effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { GetOrgComponent } from './components/get-org/get-org.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +32,7 @@ import { MatInputModule } from '@angular/material/input';
     HomeComponent,
     ConnectComponent,
     CreateOrgComponent,
+    GetOrgComponent,
   ],
   imports: [
     BrowserModule,
@@ -31,6 +43,17 @@ import { MatInputModule } from '@angular/material/input';
     MatToolbarModule,
     MatFormFieldModule,
     MatInputModule,
+    MatDividerModule,
+    StoreModule.forRoot(reducers, {
+      metaReducers
+    }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+    }),
+    EffectsModule.forRoot([]),
+    StoreModule.forFeature(fromUser.userFeatureKey, fromUser.reducer),
+    EffectsModule.forFeature([UserEffects, OrganizationEffects]),
+    StoreModule.forFeature(fromOrganization.organizationFeatureKey, fromOrganization.reducer),
   ],
   providers: [{provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {floatLabel: 'never'}}],
   bootstrap: [AppComponent]

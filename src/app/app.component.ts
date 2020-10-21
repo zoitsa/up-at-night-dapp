@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TransferService } from './services/transfer.service';
+import { ContractService } from './services/contract.service';
 
 @Component({
   selector: 'app-root',

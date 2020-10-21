@@ -9,10 +9,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class CreateOrgComponent implements OnInit {
   @Output() create = new EventEmitter();
 
-  createOrganization = this.fb.group({
-    id: ['', Validators.required],
+  form = this.fb.group({
+    id: [555, Validators.required], // uint256
+    walletAddress: ['', Validators.required],
     name: ['', Validators.required],
-    address: ['', Validators.required]
+    tokenAddress: ['', Validators.required],
   })
 
   constructor(
@@ -23,8 +24,7 @@ export class CreateOrgComponent implements OnInit {
   }
 
   Submit() {
-    this.create.emit();
-    console.log(this.createOrganization.value);
+    this.create.emit(this.form.value);
   }
 
 }
