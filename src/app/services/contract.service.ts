@@ -3,7 +3,7 @@ import Web3 from "web3";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { Observable, Subject } from 'rxjs';
-import { uDonate_address, uDonate_abi } from '../../abis.js'
+import { upAtNight_address, upAtNight_abi } from '../../abis.js'
 import { from } from 'rxjs';
 declare let window: any;
 
@@ -15,7 +15,7 @@ export class ContractService {
   private provider: any;
   private enable: any;
   private accounts: any;
-  private uDonate: any;
+  private upAtNight: any;
   web3Modal
   connected = false;
   name;
@@ -54,23 +54,26 @@ export class ContractService {
   async connectAccount() {
     this.web3Modal.clearCachedProvider();
 
-    this.provider = await this.web3Modal.connect();
-    this.web3js = new Web3(this.provider);
-    this.accounts = await this.web3js.eth.getAccounts();
+    this.provider = await this.web3Modal.connect(); // set provider
+    this.web3js = new Web3(this.provider); // create web3 instance
+    this.accounts = await this.web3js.eth.getAccounts(); 
     this.accountStatusSource.next(this.accounts)
   }
 
   async createOrganization(orgID, payableWallet, orgName, tokenAddress) {
     console.log(this.web3js);
-    this.uDonate = new this.web3js.eth.Contract(uDonate_abi, uDonate_address);
+    this.upAtNight = new this.web3js.eth.Contract(upAtNight_abi, upAtNight_address);
 
-    const create = await this.uDonate.methods.createOrganization(orgID, payableWallet, orgName, tokenAddress).send({ from: this.accounts[0] });
+    const create = await this.upAtNight
+      .methods.createOrganization(orgID, payableWallet, orgName, tokenAddress)
+      .send({ from: this.accounts[0] });
     this.newOrganization.next(create)
   }
 
   async getOrganization(orgID) {
-    this.uDonate = new this.web3js.eth.Contract(uDonate_abi, uDonate_address);
-    const get = await this.uDonate.methods.getOrganization(orgID).send({ from: this.accounts[0] });
+    this.upAtNight = new this.web3js.eth.Contract(upAtNight_abi, upAtNight_address);
+    
+    const get = await this.upAtNight.methods.getOrganization(orgID).send({ from: this.accounts[0] });
     this.organization.next(get)
   }
 

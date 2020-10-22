@@ -1,5 +1,5 @@
-export const uDonate_address = '0xe5259342776e2f8De08b5744AC44AA839F393D8a';
-export const uDonate_abi = [
+export const upAtNight_address = '0xe5259342776e2f8De08b5744AC44AA839F393D8a';
+export const upAtNight_abi = [
   {
     "inputs": [
       {
