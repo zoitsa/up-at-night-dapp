@@ -73,7 +73,7 @@ export class ContractService {
   async getOrganization(orgID) {
     this.upAtNight = new this.web3js.eth.Contract(upAtNight_abi, upAtNight_address);
     
-    const get = await this.upAtNight.methods.getOrganization(orgID).send({ from: this.accounts[0] });
+    const get = await this.upAtNight.methods.getOrganization(orgID).call({ from: this.accounts[0] });
     this.organization.next(get)
   }
 
