@@ -2,20 +2,22 @@ import { Injectable } from '@angular/core';
 import Web3 from "web3";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { upAtNight_address, upAtNight_abi } from '../../abis.js'
 import { from } from 'rxjs';
+import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
+import { subscribeOn } from 'rxjs/operators';
 declare let window: any;
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContractService {
-  private web3js: any;
-  private provider: any;
-  private enable: any;
-  private accounts: any;
-  private upAtNight: any;
+  web3js: any;
+  provider: any;
+  enable: any;
+  accounts: any;
+  upAtNight: any;
   web3Modal
   connected = false;
   name;
@@ -24,8 +26,6 @@ export class ContractService {
   accountStatus$ = this.accountStatusSource.asObservable();
   private newOrganization = new Subject<any>();
   newOrganization$ = this.newOrganization.asObservable();
-  private organization = new Subject<any>();
-  organization$ = this.organization.asObservable();
 
   constructor() {
     const providerOptions = {
@@ -61,7 +61,6 @@ export class ContractService {
   }
 
   async createOrganization(orgID, payableWallet, orgName, tokenAddress) {
-    console.log(this.web3js);
     this.upAtNight = new this.web3js.eth.Contract(upAtNight_abi, upAtNight_address);
 
     const create = await this.upAtNight
@@ -71,13 +70,30 @@ export class ContractService {
   }
 
   async getOrganization(orgID) {
+    // --- temporarily re-initializating these for the effect file 
+    this.provider = await this.web3Modal.connect(); // set provider
+    this.web3js = new Web3(this.provider); // create web3 instance
+    this.accounts = await this.web3js.eth.getAccounts(); 
+    
     this.upAtNight = new this.web3js.eth.Contract(upAtNight_abi, upAtNight_address);
     
-    const get = await this.upAtNight.methods.getOrganization(orgID).call({ from: this.accounts[0] });
-    this.organization.next(get)
+    const org = await this.upAtNight.methods.getOrganization(orgID).call({ from: this.accounts[0] });
+    
+    const organization = org;
+    const walletAddress = organization[1];
+    const balence = await this.web3js.eth.getBalance(walletAddress);
+
+    const orgWithBalence = {
+      id: organization[0],
+      payableWallet: organization[1],
+      paused: organization[2],
+      ended: organization[3],
+      causesIDs: organization[4],
+      balence: balence,
+    }
+
+    return orgWithBalence;
   }
-
-
 
 }
 

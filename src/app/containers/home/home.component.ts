@@ -2,10 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ContractService } from '../../services/contract.service';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import * as fromUser from '../../reducers/user.reducer';
+import * as fromRoot from '../../reducers/index';
+import * as fromUser from '../../selectors/user.selectors';
+import * as fromOrganization from '../../selectors/organization.selectors';
 import { takeUntil, tap } from 'rxjs/operators';
 import { connectUser, connectUserSuccess } from '../../actions/user.actions';
-import { createOrganization, createOrganizationSuccess, getOrganization, getOrganizationSuccess } from '../../actions/organization.actions';
+import { createOrganization, createOrganizationSuccess, getOrganization,} from '../../actions/organization.actions';
 
 @Component({
   selector: 'app-home',
@@ -15,21 +17,36 @@ import { createOrganization, createOrganizationSuccess, getOrganization, getOrga
 })
 export class HomeComponent implements OnInit, OnDestroy {
   account$: Observable<any>;
-  accountID;
+  selectedOrganization$: Observable<any>;
+  selectedOrganizationWalletBalence$: Observable<any>;
+  wallet$: Observable<any>;
   unsubscribe$: Subject<any> = new Subject<any>();
 
+  accountID;
+  organizationDetails;
+  organizationBalence;
+
+
+
   constructor(
-    private store$: Store<fromUser.State>,
-    private contractService: ContractService
+    private store$: Store<fromRoot.State>,
+    private contractService: ContractService,
   ) {
-    this.account$ = this.store$.pipe(select(fromUser.userAccountId))
+    // this.account$ = this.store$.pipe(select(fromUser.selectUserAccountId))
+    this.selectedOrganization$ = this.store$.pipe(select(fromOrganization.selectOrganizationDetails))
   }
 
   ngOnInit(): void {
-     this.account$.pipe(
+    // this.account$.pipe(
+    //   takeUntil(this.unsubscribe$),
+    // ).subscribe((data) => {
+    //   this.accountID = data.user[0]; // wallet taking donations, needs to be unique
+    //   console.log(this.accountID);
+    // })
+    this.selectedOrganization$.pipe(
       takeUntil(this.unsubscribe$),
     ).subscribe((data) => {
-      this.accountID = data.user[0]; // wallet taking donations, needs to be unique
+      this.organizationDetails = data;
     })
   }
 
@@ -42,13 +59,12 @@ export class HomeComponent implements OnInit, OnDestroy {
       if ( account ) {
         //TODO: Move this to dispatch in effect
         this.store$.dispatch(connectUserSuccess({ user: account }))
+        this.accountID = account;
       }
     });
   }
 
   onCreate(form) {
-    console.log(form);
-
     const orgID = form.id;
     const payableWallet = form.walletAddress;
     const orgName = form.name;
@@ -68,16 +84,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onGet(form) {
     const orgID = form.id;
-    this.store$.dispatch(getOrganization());
-    this.contractService.getOrganization(orgID)
-
-    //TODO: Move this to call service in effect
-    this.contractService.organization$.subscribe(res => {
-      if (res) {
-        //TODO: Move this to dispatch in effect
-        this.store$.dispatch(getOrganizationSuccess({ organization: res}))
-      }
-    });
+    this.store$.dispatch(getOrganization({id: orgID}));
   }
 
   ngOnDestroy() {

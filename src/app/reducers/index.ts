@@ -6,10 +6,9 @@ import {
   MetaReducer
 } from '@ngrx/store';
 import { environment } from '../../environments/environment';
+import { selectOrganizationDetails } from '../selectors/organization.selectors'
+import { selectUserAccountId} from '../selectors/user.selectors'
 
-import {
-  selectUserAccountId
-} from '../selectors/user.selectors'
 
 export interface State {
 }

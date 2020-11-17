@@ -18,17 +18,18 @@ export const reducer = createReducer(
   initialState,
 
   on(OrganizationActions.createOrganization, state => state),
- 
+
   on(OrganizationActions.createOrganizationSuccess, (state, { organization }) => (
     {
       ...state,
       newOrganization: organization
     }
   )),
-  
+
   on(OrganizationActions.createOrganizationFailure, (state, action) => state),
 
-  on(OrganizationActions.getOrganization, state => state),
+  on(
+    OrganizationActions.getOrganization, state => state),
 
   on(OrganizationActions.getOrganizationSuccess, (state, { organization }) => (
     {
@@ -36,8 +37,6 @@ export const reducer = createReducer(
       myOrganization: organization
     }
   )),
-
-  
-
 );
 
+export const myOrganization = (state: State) => state.myOrganization
