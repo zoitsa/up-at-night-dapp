@@ -2,12 +2,8 @@ import { Injectable } from '@angular/core';
 import Web3 from "web3";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { Observable, Subject, of } from 'rxjs';
-import { upAtNight_address, upAtNight_abi } from '../../abis.js'
-import { from } from 'rxjs';
-import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
-import { subscribeOn } from 'rxjs/operators';
-declare let window: any;
+import { Subject, } from 'rxjs';
+import { uDonate_address, uDonate_abi } from '../../abis.js'
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +11,9 @@ declare let window: any;
 export class ContractService {
   web3js: any;
   provider: any;
-  enable: any;
   accounts: any;
-  upAtNight: any;
+  uDonate: any;
   web3Modal
-  connected = false;
-  name;
 
   private accountStatusSource = new Subject<any>();
   accountStatus$ = this.accountStatusSource.asObservable();
@@ -61,12 +54,23 @@ export class ContractService {
   }
 
   async createOrganization(orgID, payableWallet, orgName, tokenAddress) {
-    this.upAtNight = new this.web3js.eth.Contract(upAtNight_abi, upAtNight_address);
+    // --- temporarily re-initializating these for the effect file 
+    this.provider = await this.web3Modal.connect(); // set provider
+    this.web3js = new Web3(this.provider); // create web3 instance
+    this.accounts = await this.web3js.eth.getAccounts(); 
 
-    const create = await this.upAtNight
+    console.log(orgID);
+    console.log(payableWallet);
+    console.log(orgName);
+    console.log(tokenAddress);
+    
+    this.uDonate = new this.web3js.eth.Contract(uDonate_abi, uDonate_address);
+
+    const create = await this.uDonate
       .methods.createOrganization(orgID, payableWallet, orgName, tokenAddress)
       .send({ from: this.accounts[0] });
-    this.newOrganization.next(create)
+    // this.newOrganization.next(create)
+    return create;
   }
 
   async getOrganization(orgID) {
@@ -75,9 +79,9 @@ export class ContractService {
     this.web3js = new Web3(this.provider); // create web3 instance
     this.accounts = await this.web3js.eth.getAccounts(); 
     
-    this.upAtNight = new this.web3js.eth.Contract(upAtNight_abi, upAtNight_address);
+    this.uDonate = new this.web3js.eth.Contract(uDonate_abi, uDonate_address);
     
-    const org = await this.upAtNight.methods.getOrganization(orgID).call({ from: this.accounts[0] });
+    const org = await this.uDonate.methods.getOrganization(orgID).call({ from: this.accounts[0] });
     
     const organization = org;
     const walletAddress = organization[1];
@@ -91,9 +95,24 @@ export class ContractService {
       causesIDs: organization[4],
       balence: balence,
     }
-
+     console.log(orgWithBalence);
     return orgWithBalence;
   }
+
+  async donate(id, amount, tip) {
+    console.log('hi');
+    this.uDonate = new this.web3js.eth.Contract(uDonate_abi, uDonate_address);
+    console.log(this.uDonate);
+
+    const updatedAmt = amount * 1e18;
+
+    const donate = await this.uDonate.methods.donate(555, amount, tip).send({ value: 100000000000000000, from: this.accounts[0] })
+    // const donate = await this.uDonate.methods.donate(id, tip).send({ value: updatedAmt })
+    console.log(donate);
+
+  }
+
+
 
 }
 

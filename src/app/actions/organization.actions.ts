@@ -1,7 +1,8 @@
 import { createAction, props } from '@ngrx/store';
 
 export const createOrganization = createAction(
-  '[Organization] Create Organization'
+  '[Organization] Create Organization',
+  props<{ organization: any }>()
 );
 
 export const createOrganizationSuccess = createAction(

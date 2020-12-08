@@ -18,15 +18,11 @@ import { createOrganization, createOrganizationSuccess, getOrganization,} from '
 export class HomeComponent implements OnInit, OnDestroy {
   account$: Observable<any>;
   selectedOrganization$: Observable<any>;
-  selectedOrganizationWalletBalence$: Observable<any>;
   wallet$: Observable<any>;
   unsubscribe$: Subject<any> = new Subject<any>();
 
   accountID;
   organizationDetails;
-  organizationBalence;
-
-
 
   constructor(
     private store$: Store<fromRoot.State>,
@@ -65,26 +61,26 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onCreate(form) {
-    const orgID = form.id;
-    const payableWallet = form.walletAddress;
-    const orgName = form.name;
-    const tokenAddress = form.tokenAddress;
+    const org = {
+      orgID: form.id,
+      payableWallet: form.walletAddress,
+      orgName: form.name,
+      tokenAddress: form.tokenAddress,
+    }
     
-    this.store$.dispatch(createOrganization());
-    //TODO: Move this to call service in effect
-    this.contractService.createOrganization(orgID, payableWallet, orgName, tokenAddress)
-    
-    this.contractService.newOrganization$.subscribe(res => {
-      if (res) {
-        //TODO: Move this to dispatch in effect
-        this.store$.dispatch(createOrganizationSuccess({ organization: res }));
-      }
-    });
+    this.store$.dispatch(createOrganization({organization: org}));
   }
 
   onGet(form) {
     const orgID = form.id;
     this.store$.dispatch(getOrganization({id: orgID}));
+  }
+
+  onDonate(form) {
+    // hardcoding in the 
+    // const amount = 0;
+    // const tip = 0;
+    this.contractService.donate(form.id, form.amount, form.tip);
   }
 
   ngOnDestroy() {

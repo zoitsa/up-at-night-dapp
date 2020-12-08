@@ -7,14 +7,26 @@ import { ContractService} from '../services/contract.service'
 import * as OrganizationActions from '../actions/organization.actions';
 
 
-
 @Injectable()
 export class OrganizationEffects {
+
+  createOrganization$ = createEffect((): Observable<any> => 
+    this.actions$.pipe(
+      ofType(OrganizationActions.createOrganization),
+      switchMap( async (value: any) => await this.contractService.createOrganization(
+        value.organization.orgID, 
+        value.organization.payableWallet, 
+        value.organization.orgName, 
+        value.organization.tokenAddress),
+      ),
+      map((response: any) => OrganizationActions.createOrganizationSuccess({organization: response}))
+    )
+  )
 
    getOrganization$ = createEffect((): Observable<any> => 
     this.actions$.pipe( 
       ofType(OrganizationActions.getOrganization),
-      switchMap( (value: any) => this.contractService.getOrganization(value.id),
+      switchMap( async (value: any) => await this.contractService.getOrganization(value.id),
       ),
       map((response: any) => OrganizationActions.getOrganizationSuccess({organization: response}))
     )

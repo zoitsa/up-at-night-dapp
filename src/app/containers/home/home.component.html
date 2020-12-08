@@ -1,6 +1,6 @@
 <mat-toolbar color="secondary">
 	<mat-toolbar-row>
-		<span>Up at Night</span>
+		<span>uDonate</span>
 	</mat-toolbar-row>
 </mat-toolbar>
 
@@ -18,7 +18,7 @@
 			<app-get-org (get)="onGet($event)"></app-get-org>
 		</div>
 		<div class="container" *ngIf="organizationDetails">
-			<app-detail-org [organization]="organizationDetails"></app-detail-org>
+			<app-detail-org (donate)="onDonate($event)" [organization]="organizationDetails"></app-detail-org>
 		</div>
 	</div>
 </div>
