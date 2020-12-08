@@ -5,11 +5,11 @@
 </mat-toolbar>
 
 <div class="section mat-app-background">
-	<div *ngIf="!accountID">
+	<div *ngIf="!connected">
     <app-connect (connect)="onConnect()"></app-connect>
   </div>
   
-	<div *ngIf="accountID">
+	<div *ngIf="connected">
 		<div class="container">
 			<app-create-org (create)="onCreate($event)"></app-create-org>
 		</div>

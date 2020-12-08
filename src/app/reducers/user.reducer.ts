@@ -5,10 +5,12 @@ export const userFeatureKey = 'user';
 
 export interface State {
   user: string;
+  connected: boolean;
 }
 
 export const initialState: State = {
-  user: ''
+  user: '',
+  connected: false, 
 };
 
 
@@ -19,7 +21,8 @@ export const reducer = createReducer(
   on(UserActions.connectUserSuccess, (state, { user }) => (
     {
       ...state,
-      user
+      user,
+      connected: true,
     }
   )),
 
@@ -28,3 +31,4 @@ export const reducer = createReducer(
 );
 
 export const userAccountId = (state: State) => state.user
+export const connectionStatus = (state: State) => state.connected

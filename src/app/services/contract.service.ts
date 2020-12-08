@@ -17,8 +17,6 @@ export class ContractService {
 
   private accountStatusSource = new Subject<any>();
   accountStatus$ = this.accountStatusSource.asObservable();
-  private newOrganization = new Subject<any>();
-  newOrganization$ = this.newOrganization.asObservable();
 
   constructor() {
     const providerOptions = {
@@ -45,12 +43,13 @@ export class ContractService {
   }
 
   async connectAccount() {
-    this.web3Modal.clearCachedProvider();
-
+    console.log('test');
+    // this.web3Modal.clearCachedProvider();
     this.provider = await this.web3Modal.connect(); // set provider
     this.web3js = new Web3(this.provider); // create web3 instance
     this.accounts = await this.web3js.eth.getAccounts(); 
-    this.accountStatusSource.next(this.accounts)
+    return this.accounts;
+    // this.accountStatusSource.next(this.accounts)
   }
 
   async createOrganization(orgID, payableWallet, orgName, tokenAddress) {
@@ -59,17 +58,11 @@ export class ContractService {
     this.web3js = new Web3(this.provider); // create web3 instance
     this.accounts = await this.web3js.eth.getAccounts(); 
 
-    console.log(orgID);
-    console.log(payableWallet);
-    console.log(orgName);
-    console.log(tokenAddress);
-    
     this.uDonate = new this.web3js.eth.Contract(uDonate_abi, uDonate_address);
 
     const create = await this.uDonate
       .methods.createOrganization(orgID, payableWallet, orgName, tokenAddress)
       .send({ from: this.accounts[0] });
-    // this.newOrganization.next(create)
     return create;
   }
 

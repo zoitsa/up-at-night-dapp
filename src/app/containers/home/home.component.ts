@@ -17,28 +17,28 @@ import { createOrganization, createOrganizationSuccess, getOrganization,} from '
 })
 export class HomeComponent implements OnInit, OnDestroy {
   account$: Observable<any>;
+  display$: Observable<any>;
   selectedOrganization$: Observable<any>;
   wallet$: Observable<any>;
   unsubscribe$: Subject<any> = new Subject<any>();
 
-  accountID;
+  connected;
   organizationDetails;
 
   constructor(
     private store$: Store<fromRoot.State>,
     private contractService: ContractService,
   ) {
-    // this.account$ = this.store$.pipe(select(fromUser.selectUserAccountId))
+    this.display$ = this.store$.pipe(select(fromUser.selectConnectionStatus))
     this.selectedOrganization$ = this.store$.pipe(select(fromOrganization.selectOrganizationDetails))
   }
 
   ngOnInit(): void {
-    // this.account$.pipe(
-    //   takeUntil(this.unsubscribe$),
-    // ).subscribe((data) => {
-    //   this.accountID = data.user[0]; // wallet taking donations, needs to be unique
-    //   console.log(this.accountID);
-    // })
+    this.display$.pipe(
+      takeUntil(this.unsubscribe$),
+    ).subscribe((res) => {
+      this.connected = res;
+    })
     this.selectedOrganization$.pipe(
       takeUntil(this.unsubscribe$),
     ).subscribe((data) => {
@@ -47,17 +47,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onConnect() {
-    // TODO: dispatch connectUser action and call service in effect
     this.store$.dispatch(connectUser());
-    this.contractService.connectAccount();
-
-    this.contractService.accountStatus$.subscribe(account => {
-      if ( account ) {
-        //TODO: Move this to dispatch in effect
-        this.store$.dispatch(connectUserSuccess({ user: account }))
-        this.accountID = account;
-      }
-    });
   }
 
   onCreate(form) {

@@ -10,3 +10,7 @@ export const selectUserAccountId = createSelector(
   fromUser.userAccountId
 )
 
+export const selectConnectionStatus = createSelector(
+  selectUserState,
+  fromUser.connectionStatus
+)
