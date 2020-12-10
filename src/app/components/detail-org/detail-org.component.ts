@@ -9,6 +9,7 @@ export class DetailOrgComponent implements OnInit, OnChanges {
   @Input() organization: object;
   @Output() donate = new EventEmitter<string>();
   myOrganization;
+  walletBalance;
 
   form = this.fb.group({
     id: [null, Validators.required], // uint256
@@ -21,12 +22,12 @@ export class DetailOrgComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.myOrganization);
-    
   }
 
   ngOnChanges() {
     this.myOrganization = this.organization;
+    const balance = this.myOrganization.balence / 1e18
+    this.walletBalance = balance.toFixed(2);
   }
 
   sendDonation() {

@@ -43,13 +43,10 @@ export class ContractService {
   }
 
   async connectAccount() {
-    console.log('test');
-    // this.web3Modal.clearCachedProvider();
     this.provider = await this.web3Modal.connect(); // set provider
     this.web3js = new Web3(this.provider); // create web3 instance
     this.accounts = await this.web3js.eth.getAccounts(); 
     return this.accounts;
-    // this.accountStatusSource.next(this.accounts)
   }
 
   async createOrganization(orgID, payableWallet, orgName, tokenAddress) {
@@ -88,24 +85,22 @@ export class ContractService {
       causesIDs: organization[4],
       balence: balence,
     }
-     console.log(orgWithBalence);
+
     return orgWithBalence;
   }
 
   async donate(id, amount, tip) {
-    console.log('hi');
+
+    this.provider = await this.web3Modal.connect(); // set provider
+    this.web3js = new Web3(this.provider); // create web3 instance
+    this.accounts = await this.web3js.eth.getAccounts(); 
     this.uDonate = new this.web3js.eth.Contract(uDonate_abi, uDonate_address);
-    console.log(this.uDonate);
 
     const updatedAmt = amount * 1e18;
 
-    const donate = await this.uDonate.methods.donate(555, amount, tip).send({ value: 100000000000000000, from: this.accounts[0] })
-    // const donate = await this.uDonate.methods.donate(id, tip).send({ value: updatedAmt })
-    console.log(donate);
-
+    const donate = await this.uDonate.methods.donateETH(id, tip).send({ from: this.accounts[0], value: updatedAmt })
+    return donate;
   }
-
-
 
 }
 

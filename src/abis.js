@@ -1,4 +1,4 @@
-export const uDonate_address = '0xe5259342776e2f8De08b5744AC44AA839F393D8a';
+export const uDonate_address = '0xA11e73F851C12d8d25a7b88a6121AD365De1838c';
 export const uDonate_abi = [
   {
     "inputs": [
@@ -369,8 +369,14 @@ export const uDonate_abi = [
         "type": "address"
       }
     ],
-    "name": "addCause",
-    "outputs": [],
+    "name": "createCause",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -419,16 +425,11 @@ export const uDonate_abi = [
       },
       {
         "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tip",
+        "name": "tipAmount",
         "type": "uint256"
       }
     ],
-    "name": "donate",
+    "name": "donateETH",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"

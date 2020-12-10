@@ -14,7 +14,6 @@ export class UserEffects {
   connect$ = createEffect((): Observable<any> => 
   this.actions$.pipe( 
     ofType(UserActions.connectUser),
-    tap(data => console.log(data)),
     switchMap( async () => await this.contractService.connectAccount(),
     ),
     map((response: any) => UserActions.connectUserSuccess({user: response}))
