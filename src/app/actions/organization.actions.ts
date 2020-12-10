@@ -43,3 +43,18 @@ export const getBalenceFailure = createAction(
   '[Organization] Get Balence Failure',
   props<{ error: any }>()
 );
+
+export const donate = createAction(
+  '[Organization] Donate',
+  props<{ id: any, amount: any, tip: any,}>()
+);
+
+export const donateSuccess = createAction(
+  '[Organization] Donate Success',
+  props<{ res: any }>()
+);
+
+export const donateFailure = createAction(
+  '[Organization] Donate',
+  props<{ error: any }>()
+);

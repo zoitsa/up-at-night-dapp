@@ -90,7 +90,6 @@ export class ContractService {
   }
 
   async donate(id, amount, tip) {
-
     this.provider = await this.web3Modal.connect(); // set provider
     this.web3js = new Web3(this.provider); // create web3 instance
     this.accounts = await this.web3js.eth.getAccounts(); 

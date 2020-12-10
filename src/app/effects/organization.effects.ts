@@ -32,6 +32,16 @@ export class OrganizationEffects {
     )
    )
 
+   donate$ = createEffect((): Observable<any> => 
+   this.actions$.pipe( 
+     ofType(OrganizationActions.donate),
+     switchMap( async (value: any) => await this.contractService.donate(value.id, value.amount, value.tip),
+     ),
+     map((response: any) => OrganizationActions.donateSuccess({res: response}))
+     /*todo: update reducer*/
+   )
+  ) 
+
 
   constructor(
     private actions$: Actions,

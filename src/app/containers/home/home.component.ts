@@ -6,8 +6,8 @@ import * as fromRoot from '../../reducers/index';
 import * as fromUser from '../../selectors/user.selectors';
 import * as fromOrganization from '../../selectors/organization.selectors';
 import { takeUntil, tap } from 'rxjs/operators';
-import { connectUser, connectUserSuccess } from '../../actions/user.actions';
-import { createOrganization, createOrganizationSuccess, getOrganization,} from '../../actions/organization.actions';
+import { connectUser } from '../../actions/user.actions';
+import { createOrganization, getOrganization, donate} from '../../actions/organization.actions';
 
 @Component({
   selector: 'app-home',
@@ -67,10 +67,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onDonate(form) {
-    // hardcoding in the 
-    // const amount = 0;
-    // const tip = 0;
-    this.contractService.donate(form.id, form.amount, form.tip);
+    this.store$.dispatch(donate({id: form.id, amount: form.amount, tip: form.tip, }));
   }
 
   ngOnDestroy() {
