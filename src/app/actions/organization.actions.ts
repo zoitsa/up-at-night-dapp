@@ -1,7 +1,8 @@
 import { createAction, props } from '@ngrx/store';
 
 export const createOrganization = createAction(
-  '[Organization] Create Organization'
+  '[Organization] Create Organization',
+  props<{ organization: any }>()
 );
 
 export const createOrganizationSuccess = createAction(
@@ -15,7 +16,8 @@ export const createOrganizationFailure = createAction(
 );
 
 export const getOrganization = createAction(
-  '[Organization] Get Organization'
+  '[Organization] Get Organization',
+  props<{ id: any }>()
 );
 
 export const getOrganizationSuccess = createAction(
@@ -25,5 +27,34 @@ export const getOrganizationSuccess = createAction(
 
 export const getOrganizationFailure = createAction(
   '[Organization] Get Organization Failure',
+  props<{ error: any }>()
+);
+
+export const getBalence = createAction(
+  '[Organization] Get Balence'
+);
+
+export const getBalenceSuccess = createAction(
+  '[Organization] Get Balence Success',
+  props<{ balence: number | string }>()
+);
+
+export const getBalenceFailure = createAction(
+  '[Organization] Get Balence Failure',
+  props<{ error: any }>()
+);
+
+export const donate = createAction(
+  '[Organization] Donate',
+  props<{ id: any, amount: any, tip: any,}>()
+);
+
+export const donateSuccess = createAction(
+  '[Organization] Donate Success',
+  props<{ res: any }>()
+);
+
+export const donateFailure = createAction(
+  '[Organization] Donate',
   props<{ error: any }>()
 );

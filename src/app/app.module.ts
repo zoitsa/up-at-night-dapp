@@ -15,6 +15,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule, MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatCardModule } from '@angular/material/card';
+import { MatRadioModule } from '@angular/material/radio';
 
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
@@ -25,6 +27,7 @@ import * as fromOrganization from './reducers/organization.reducer';
 import { OrganizationEffects } from './effects/organization.effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { GetOrgComponent } from './components/get-org/get-org.component';
+import { DetailOrgComponent } from './components/detail-org/detail-org.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +36,7 @@ import { GetOrgComponent } from './components/get-org/get-org.component';
     ConnectComponent,
     CreateOrgComponent,
     GetOrgComponent,
+    DetailOrgComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,6 +48,8 @@ import { GetOrgComponent } from './components/get-org/get-org.component';
     MatFormFieldModule,
     MatInputModule,
     MatDividerModule,
+    MatCardModule,
+    MatRadioModule,
     StoreModule.forRoot(reducers, {
       metaReducers
     }),

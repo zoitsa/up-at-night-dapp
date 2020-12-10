@@ -1,0 +1,30 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title> 
+          <h3>Organization {{ myOrganization.id }}</h3> 
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div>
+        <p>Wallet Balence: {{ walletBalance }} </p>
+      </div>
+      
+      <div class="form-container" [formGroup]="form">
+        <p>Donate to this organization</p>
+        <mat-form-field appearance="outline">
+          <mat-label>Donation Amount (Eth)</mat-label>
+          <input matInput type="text" placeholder="Name" formControlName="amount"
+            placeholder="uint256 number...">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Tip (Eth)</mat-label>
+          <input matInput type="text" placeholder="Name" formControlName="tip"
+            placeholder="uint256 number...">
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="sendDonation()">Donate</button>
+    </mat-card-actions>
+
+</mat-card>

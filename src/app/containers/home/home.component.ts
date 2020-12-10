@@ -2,10 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ContractService } from '../../services/contract.service';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import * as fromUser from '../../reducers/user.reducer';
+import * as fromRoot from '../../reducers/index';
+import * as fromUser from '../../selectors/user.selectors';
+import * as fromOrganization from '../../selectors/organization.selectors';
 import { takeUntil, tap } from 'rxjs/operators';
-import { connectUser, connectUserSuccess } from '../../actions/user.actions';
-import { createOrganization, createOrganizationSuccess, getOrganization, getOrganizationSuccess } from '../../actions/organization.actions';
+import { connectUser } from '../../actions/user.actions';
+import { createOrganization, getOrganization, donate} from '../../actions/organization.actions';
 
 @Component({
   selector: 'app-home',
@@ -15,69 +17,57 @@ import { createOrganization, createOrganizationSuccess, getOrganization, getOrga
 })
 export class HomeComponent implements OnInit, OnDestroy {
   account$: Observable<any>;
-  accountID;
+  display$: Observable<any>;
+  selectedOrganization$: Observable<any>;
+  wallet$: Observable<any>;
   unsubscribe$: Subject<any> = new Subject<any>();
 
+  connected;
+  organizationDetails;
+
   constructor(
-    private store$: Store<fromUser.State>,
-    private contractService: ContractService
+    private store$: Store<fromRoot.State>,
+    private contractService: ContractService,
   ) {
-    this.account$ = this.store$.pipe(select(fromUser.userAccountId))
+    this.display$ = this.store$.pipe(select(fromUser.selectConnectionStatus))
+    this.selectedOrganization$ = this.store$.pipe(select(fromOrganization.selectOrganizationDetails))
   }
 
   ngOnInit(): void {
-     this.account$.pipe(
+    this.display$.pipe(
+      takeUntil(this.unsubscribe$),
+    ).subscribe((res) => {
+      this.connected = res;
+    })
+    this.selectedOrganization$.pipe(
       takeUntil(this.unsubscribe$),
     ).subscribe((data) => {
-      this.accountID = data.user[0]; // wallet taking donations, needs to be unique
+      this.organizationDetails = data;
     })
   }
 
   onConnect() {
-    // TODO: dispatch connectUser action and call service in effect
     this.store$.dispatch(connectUser());
-    this.contractService.connectAccount();
-
-    this.contractService.accountStatus$.subscribe(account => {
-      if ( account ) {
-        //TODO: Move this to dispatch in effect
-        this.store$.dispatch(connectUserSuccess({ user: account }))
-      }
-    });
   }
 
   onCreate(form) {
-    console.log(form);
-
-    const orgID = form.id;
-    const payableWallet = form.walletAddress;
-    const orgName = form.name;
-    const tokenAddress = form.tokenAddress;
+    const org = {
+      orgID: form.id,
+      payableWallet: form.walletAddress,
+      orgName: form.name,
+      tokenAddress: form.tokenAddress,
+    }
     
-    this.store$.dispatch(createOrganization());
-    //TODO: Move this to call service in effect
-    this.contractService.createOrganization(orgID, payableWallet, orgName, tokenAddress)
-    
-    this.contractService.newOrganization$.subscribe(res => {
-      if (res) {
-        //TODO: Move this to dispatch in effect
-        this.store$.dispatch(createOrganizationSuccess({ organization: res }));
-      }
-    });
+    this.store$.dispatch(createOrganization({organization: org}));
   }
 
   onGet(form) {
     const orgID = form.id;
-    this.store$.dispatch(getOrganization());
-    this.contractService.getOrganization(orgID)
+    this.store$.dispatch(getOrganization({id: orgID}));
+  }
 
-    //TODO: Move this to call service in effect
-    this.contractService.organization$.subscribe(res => {
-      if (res) {
-        //TODO: Move this to dispatch in effect
-        this.store$.dispatch(getOrganizationSuccess({ organization: res}))
-      }
-    });
+  onDonate(form) {
+    this.store$.dispatch(donate({id: form.id, amount: form.amount, tip: form.tip, }));
   }
 
   ngOnDestroy() {

@@ -1,21 +1,24 @@
 <mat-toolbar color="secondary">
 	<mat-toolbar-row>
-		<span>Up at Night</span>
+		<span>uDonate</span>
 	</mat-toolbar-row>
 </mat-toolbar>
 
 <div class="section mat-app-background">
-	<div *ngIf="!accountID">
+	<div *ngIf="!connected">
     <app-connect (connect)="onConnect()"></app-connect>
   </div>
   
-	<div *ngIf="accountID">
+	<div *ngIf="connected">
 		<div class="container">
 			<app-create-org (create)="onCreate($event)"></app-create-org>
 		</div>
 		<mat-divider></mat-divider>
 		<div class="container">
 			<app-get-org (get)="onGet($event)"></app-get-org>
+		</div>
+		<div class="container" *ngIf="organizationDetails">
+			<app-detail-org (donate)="onDonate($event)" [organization]="organizationDetails"></app-detail-org>
 		</div>
 	</div>
 </div>

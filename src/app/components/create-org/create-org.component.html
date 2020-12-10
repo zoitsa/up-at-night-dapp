@@ -16,11 +16,18 @@
 		</mat-form-field>
 	</div>
 	<div>
-		<mat-form-field appearance="outline">
+
+		<mat-label>Token Address</mat-label>
+		<mat-radio-group class="example-radio-group" aria-label="Select an option" formControlName="tokenAddress">
+			<mat-radio-button class="example-radio-button" value="0x0000000000000000000000000000000000000000">ETH</mat-radio-button>
+			<mat-radio-button class="example-radio-button" value="0xaD6D458402F60fD3Bd25163575031ACDce07538D">DAI</mat-radio-button>
+		</mat-radio-group>
+
+		<!-- <mat-form-field appearance="outline">
 			<mat-label>Token Address</mat-label>
 			<textarea matInput type="text" formControlName="tokenAddress" placeholder="0x000000...">
 		</textarea>
-		</mat-form-field>
+		</mat-form-field> -->
 	</div>
 	<button mat-raised-button color="primary" [disabled]="!form.valid" (click)="Submit()">Submit</button>
 </div>
