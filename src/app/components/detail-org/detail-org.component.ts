@@ -8,6 +8,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class DetailOrgComponent implements OnInit, OnChanges {
   @Input() organization: object;
   @Output() donate = new EventEmitter<string>();
+  @Output() pause = new EventEmitter<any>();
+  @Output() unpause = new EventEmitter<any>();
   myOrganization;
   walletBalance;
 
@@ -35,9 +37,25 @@ export class DetailOrgComponent implements OnInit, OnChanges {
 
     if (this.form.valid) {
       this.donate.emit(this.form.value);
-    }
-    
-    
+    } 
+  }
+
+  pauseOrganization() {
+    this.form.get('id').setValue(this.myOrganization.id);
+    this.pause.emit(
+    {
+      id: this.form.value.id, 
+      causeIds: [],
+    })
+  }
+
+  unpauseOrganization() {
+    this.form.get('id').setValue(this.myOrganization.id);
+    this.unpause.emit(
+    {
+      id: this.form.value.id, 
+      causeIds: [],
+    })
   }
 
 
