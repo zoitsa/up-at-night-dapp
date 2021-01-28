@@ -70,6 +70,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.store$.dispatch(donate({id: form.id, amount: form.amount, tip: form.tip, }));
   }
 
+  onPause(data) {
+    console.log(data);
+    // move to ngrx
+    this.contractService.pauseOrganization(data.id, data.causeIds);
+  }
+
+  onUnpause(data) {
+    console.log(data);
+    // move to ngrx
+    this.contractService.unpauseOrganization(data.id, data.causeIds);
+  }
+
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();

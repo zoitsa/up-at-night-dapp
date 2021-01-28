@@ -86,6 +86,8 @@ export class ContractService {
       balence: balence,
     }
 
+    console.log(orgWithBalence);
+    console.log(this.uDonate);
     return orgWithBalence;
   }
 
@@ -99,6 +101,36 @@ export class ContractService {
 
     const donate = await this.uDonate.methods.donateETH(id, tip).send({ from: this.accounts[0], value: updatedAmt })
     return donate;
+  }
+
+  async pauseOrganization(id, causeIds) {
+    this.provider = await this.web3Modal.connect(); // set provider
+    this.web3js = new Web3(this.provider); // create web3 instance
+    this.accounts = await this.web3js.eth.getAccounts(); 
+    this.uDonate = new this.web3js.eth.Contract(uDonate_abi, uDonate_address);
+
+    const pause = await this.uDonate.methods.pauseOrganization(id, causeIds).send({from: this.accounts[0]})
+
+    this.uDonate.events.PauseOrganization({})
+    console.log(pause);
+
+    // -- call subscrube to event
+    
+  }
+
+  async unpauseOrganization(id, causeIds) {
+    console.log('unpause');
+    this.provider = await this.web3Modal.connect(); // set provider
+    this.web3js = new Web3(this.provider); // create web3 instance
+    this.accounts = await this.web3js.eth.getAccounts();
+    this.uDonate = new this.web3js.eth.Contract(uDonate_abi, uDonate_address);
+    console.log(this.web3js);
+    const unpause = await this.uDonate.methods.unpauseOrganization(id, causeIds).send({from: this.accounts[0]})
+    this.uDonate.events.UnpauseOrganization({})
+    console.log(unpause);
+    
+    // -- call subscribe to event
+    
   }
 
 }
