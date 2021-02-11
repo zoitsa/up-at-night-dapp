@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatIconModule } from '@angular/material/icon';
 
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
@@ -50,6 +51,7 @@ import { DetailOrgComponent } from './components/detail-org/detail-org.component
     MatDividerModule,
     MatCardModule,
     MatRadioModule,
+    MatIconModule,
     StoreModule.forRoot(reducers, {
       metaReducers
     }),

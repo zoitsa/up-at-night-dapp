@@ -58,3 +58,13 @@ export const donateFailure = createAction(
   '[Organization] Donate',
   props<{ error: any }>()
 );
+
+export const checkAdmin = createAction(
+  '[Organization] Check Admin',
+  props<{ id: any }>()
+);
+
+export const checkAdminSuccess = createAction(
+  '[Organization] Check Admin Success',
+  props<{ boolean: any }>()
+);

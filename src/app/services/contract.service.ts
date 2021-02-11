@@ -63,6 +63,19 @@ export class ContractService {
     return create;
   }
 
+  async isOrganizationAdmin(orgID) {
+     // --- temporarily re-initializating these for the effect file 
+     this.provider = await this.web3Modal.connect(); // set provider
+     this.web3js = new Web3(this.provider); // create web3 instance
+     this.accounts = await this.web3js.eth.getAccounts(); 
+     
+     this.uDonate = new this.web3js.eth.Contract(uDonate_abi, uDonate_address);
+    
+    const checkAdmin = await this.uDonate.methods.isOrgAdmin(orgID, this.accounts[0]).call({ from: this.accounts[0] });
+    console.log(checkAdmin);
+    return checkAdmin;
+  }
+
   async getOrganization(orgID) {
     // --- temporarily re-initializating these for the effect file 
     this.provider = await this.web3Modal.connect(); // set provider
@@ -108,10 +121,8 @@ export class ContractService {
     this.web3js = new Web3(this.provider); // create web3 instance
     this.accounts = await this.web3js.eth.getAccounts(); 
     this.uDonate = new this.web3js.eth.Contract(uDonate_abi, uDonate_address);
-
+    
     const pause = await this.uDonate.methods.pauseOrganization(id, causeIds).send({from: this.accounts[0]})
-
-    this.uDonate.events.PauseOrganization({})
     console.log(pause);
 
     // -- call subscrube to event
@@ -124,13 +135,29 @@ export class ContractService {
     this.web3js = new Web3(this.provider); // create web3 instance
     this.accounts = await this.web3js.eth.getAccounts();
     this.uDonate = new this.web3js.eth.Contract(uDonate_abi, uDonate_address);
-    console.log(this.web3js);
+    
     const unpause = await this.uDonate.methods.unpauseOrganization(id, causeIds).send({from: this.accounts[0]})
-    this.uDonate.events.UnpauseOrganization({})
     console.log(unpause);
-    
-    // -- call subscribe to event
-    
+  }
+
+  async addNewOrganizationAdmin(address, id) {
+    this.provider = await this.web3Modal.connect(); // set provider
+    this.web3js = new Web3(this.provider); // create web3 instance
+    this.accounts = await this.web3js.eth.getAccounts();
+    this.uDonate = new this.web3js.eth.Contract(uDonate_abi, uDonate_address);
+
+    const add = await this.uDonate.methods.addAdmin(address, id).send({from: this.accounts[0]})
+    console.log(add);
+  }
+
+  async removeOrganizationAdmin(address, id) {
+    this.provider = await this.web3Modal.connect(); // set provider
+    this.web3js = new Web3(this.provider); // create web3 instance
+    this.accounts = await this.web3js.eth.getAccounts();
+    this.uDonate = new this.web3js.eth.Contract(uDonate_abi, uDonate_address);
+
+    const remove = await this.uDonate.methods.removeAdmin(address, id).send({from: this.accounts[0]})
+    console.log(remove);
   }
 
 }

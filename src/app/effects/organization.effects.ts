@@ -32,6 +32,15 @@ export class OrganizationEffects {
     )
    )
 
+   checkOrgAdmin$ = createEffect((): Observable<any> => 
+   this.actions$.pipe( 
+     ofType(OrganizationActions.checkAdmin),
+     switchMap( async (value: any) => await this.contractService.isOrganizationAdmin(value.id),
+     ),
+     map((response: any) => OrganizationActions.checkAdminSuccess({boolean: response}))
+   )
+  )
+
    donate$ = createEffect((): Observable<any> => 
    this.actions$.pipe( 
      ofType(OrganizationActions.donate),

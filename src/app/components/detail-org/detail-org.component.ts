@@ -7,16 +7,29 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class DetailOrgComponent implements OnInit, OnChanges {
   @Input() organization: object;
+  @Input() adminStatus: boolean;
   @Output() donate = new EventEmitter<string>();
   @Output() pause = new EventEmitter<any>();
   @Output() unpause = new EventEmitter<any>();
+  @Output() add = new EventEmitter<any>();
+  @Output() remove = new EventEmitter<any>();
   myOrganization;
   walletBalance;
+  orgAdminStatus;
 
-  form = this.fb.group({
+
+  donateForm = this.fb.group({
     id: [null, Validators.required], // uint256
     amount: [null, Validators.required], // uint256
     tip: [null, Validators.required], // uint256
+  })
+
+  addAdminForm = this.fb.group({
+    address: [null, Validators.required], // uint256
+  })
+
+  removeAdminForm = this.fb.group({
+    address: [null, Validators.required], // uint256
   })
 
   constructor(
@@ -26,36 +39,60 @@ export class DetailOrgComponent implements OnInit, OnChanges {
   ngOnInit(): void {
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes) {
+    console.log(this.adminStatus);
     this.myOrganization = this.organization;
     const balance = this.myOrganization.balence / 1e18
     this.walletBalance = balance.toFixed(2);
   }
 
   sendDonation() {
-    this.form.get('id').setValue(this.myOrganization.id);
+    this.donateForm.get('id').setValue(this.myOrganization.id);
 
-    if (this.form.valid) {
-      this.donate.emit(this.form.value);
+    if (this.donateForm.valid) {
+      this.donate.emit(this.donateForm.value);
     } 
   }
 
   pauseOrganization() {
-    this.form.get('id').setValue(this.myOrganization.id);
+    this.donateForm.get('id').setValue(this.myOrganization.id);
     this.pause.emit(
     {
-      id: this.form.value.id, 
+      id: this.donateForm.value.id, 
       causeIds: [],
     })
   }
 
   unpauseOrganization() {
-    this.form.get('id').setValue(this.myOrganization.id);
+    this.donateForm.get('id').setValue(this.myOrganization.id);
     this.unpause.emit(
     {
-      id: this.form.value.id, 
+      id: this.donateForm.value.id, 
       causeIds: [],
     })
+  }
+
+  addAdmin() {
+    console.log(this.addAdminForm.value);
+    console.log(this.donateForm.get('id'));
+    if (this.addAdminForm.valid) { 
+      this.add.emit({
+        address: this.addAdminForm.value.address,
+        id: this.myOrganization.id
+      });
+    }
+  }
+
+  removeAdmin() {
+    console.log(this.removeAdminForm.value);
+    console.log(this.removeAdminForm.valid);
+    console.log(this.myOrganization.id);
+    if (this.removeAdminForm.valid) { 
+      this.remove.emit({
+        address: this.removeAdminForm.value.address,
+        id: this.myOrganization.id
+      });
+    }
   }
 
 
