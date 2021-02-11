@@ -6,11 +6,13 @@ export const organizationFeatureKey = 'organization';
 export interface State {
   myOrganization: {}
   newOrganization: {};
+  isAdmin: boolean,
 }
 
 export const initialState: State = {
   myOrganization: {},
   newOrganization: {},
+  isAdmin: false,
 };
 
 
@@ -37,6 +39,13 @@ export const reducer = createReducer(
       myOrganization: organization
     }
   )),
+  on(OrganizationActions.checkAdminSuccess, (state, { boolean }) => (
+    {
+      ...state,
+      isAdmin: boolean
+    }
+  )),
 );
 
 export const myOrganization = (state: State) => state.myOrganization
+export const isAdmin = (state: State) => state.isAdmin

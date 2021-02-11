@@ -1,35 +1,62 @@
 <mat-card>
-    <mat-card-header>
-        <mat-card-title> 
-          <h3>Organization {{ myOrganization.id }}</h3> 
-        </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div>
-        <p>Wallet Balence: {{ walletBalance }} </p>
-      </div>
-      
-      <div class="form-container" [formGroup]="form">
-        <p>Donate to this organization</p>
-        <mat-form-field appearance="outline">
-          <mat-label>Donation Amount (Eth)</mat-label>
-          <input matInput type="text" placeholder="Name" formControlName="amount"
-            placeholder="uint256 number...">
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Tip (Eth)</mat-label>
-          <input matInput type="text" placeholder="Name" formControlName="tip"
-            placeholder="uint256 number...">
-        </mat-form-field>
-      </div>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-raised-button color="primary" (click)="sendDonation()">Donate</button>
-    </mat-card-actions>
+  <mat-card-header>
+    <mat-card-title>
+      <h3>Organization {{ myOrganization.id }}</h3>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div>
+      <p>Wallet Balence: {{ walletBalance }} </p>
+    </div>
+
+    <div class="form-container" [formGroup]="donateForm">
+      <p>Donate to this organization</p>
+      <mat-form-field appearance="outline">
+        <mat-label>Donation Amount (Eth)</mat-label>
+        <input matInput type="text" placeholder="Name" formControlName="amount" placeholder="uint256 number...">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Tip (Eth)</mat-label>
+        <input matInput type="text" placeholder="Name" formControlName="tip" placeholder="uint256 number...">
+      </mat-form-field>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="sendDonation()">Donate</button>
+      </mat-card-actions>
+    </div>
+  </mat-card-content>
+  
+
+  <div *ngIf="adminStatus">
     <mat-card-actions>
       <button mat-raised-button color="primary" (click)="pauseOrganization()">Pause</button>
     </mat-card-actions>
     <mat-card-actions>
       <button mat-raised-button color="primary" (click)="unpauseOrganization()">Unpause</button>
     </mat-card-actions>
+    
+    <div [formGroup]="addAdminForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Add Admin</mat-label>
+        <input matInput type="text" placeholder="admin" formControlName="address" placeholder="admin token">
+      </mat-form-field>
+      <button (click)="addAdmin()" mat-icon-button aria-label="Add admin button with plus symbol">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </div>
+    <div [formGroup]="removeAdminForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Remove Admin</mat-label>
+        <input matInput type="text" placeholder="admin" formControlName="address" placeholder="admin token">
+      </mat-form-field>
+      <button (click)="removeAdmin()" mat-icon-button aria-label="Remove admin button with minus symbol">
+        <mat-icon>remove_circle</mat-icon>
+      </button>
+    </div>
+    <div>
+      <p>Admins: </p>
+      <p>0xd821d15B7CB3B519B0273876838709C784CC2855 </p>
+      <p>0xd821d15B7CB3B519B0273876838709C784CC2855 </p>
+    </div>
+  </div>
+
 </mat-card>

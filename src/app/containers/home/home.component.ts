@@ -7,7 +7,7 @@ import * as fromUser from '../../selectors/user.selectors';
 import * as fromOrganization from '../../selectors/organization.selectors';
 import { takeUntil, tap } from 'rxjs/operators';
 import { connectUser } from '../../actions/user.actions';
-import { createOrganization, getOrganization, donate} from '../../actions/organization.actions';
+import { createOrganization, getOrganization, donate, checkAdmin} from '../../actions/organization.actions';
 
 @Component({
   selector: 'app-home',
@@ -18,19 +18,22 @@ import { createOrganization, getOrganization, donate} from '../../actions/organi
 export class HomeComponent implements OnInit, OnDestroy {
   account$: Observable<any>;
   display$: Observable<any>;
+  isAdmin$: Observable<any>;
   selectedOrganization$: Observable<any>;
   wallet$: Observable<any>;
   unsubscribe$: Subject<any> = new Subject<any>();
 
   connected;
   organizationDetails;
+  isAdmin;
 
   constructor(
     private store$: Store<fromRoot.State>,
     private contractService: ContractService,
   ) {
-    this.display$ = this.store$.pipe(select(fromUser.selectConnectionStatus))
-    this.selectedOrganization$ = this.store$.pipe(select(fromOrganization.selectOrganizationDetails))
+    this.display$ = this.store$.pipe(select(fromUser.selectConnectionStatus));
+    this.selectedOrganization$ = this.store$.pipe(select(fromOrganization.selectOrganizationDetails));
+    this.isAdmin$ = this.store$.pipe(select(fromOrganization.selectAdminStatus));
   }
 
   ngOnInit(): void {
@@ -43,6 +46,11 @@ export class HomeComponent implements OnInit, OnDestroy {
       takeUntil(this.unsubscribe$),
     ).subscribe((data) => {
       this.organizationDetails = data;
+    })
+    this.isAdmin$.pipe(
+      takeUntil(this.unsubscribe$),
+    ).subscribe((boolean) => {
+      this.isAdmin = boolean;
     })
   }
 
@@ -64,6 +72,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   onGet(form) {
     const orgID = form.id;
     this.store$.dispatch(getOrganization({id: orgID}));
+    this.store$.dispatch(checkAdmin({id: orgID}))
   }
 
   onDonate(form) {
@@ -72,14 +81,28 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onPause(data) {
     console.log(data);
-    // move to ngrx
+    // TODO move to ngrx effect?
     this.contractService.pauseOrganization(data.id, data.causeIds);
   }
 
   onUnpause(data) {
     console.log(data);
-    // move to ngrx
+    // TODO move to ngrx effect?
     this.contractService.unpauseOrganization(data.id, data.causeIds);
+  }
+
+  onAdd(data) {
+    console.log(data);
+    // incorporate uDonate isAdmin function?
+    // TODO move to ngrx effect?
+    this.contractService.addNewOrganizationAdmin(data.address, data.id);
+  }
+
+  onRemove(data) {
+    console.log(data);
+    // incorporate uDonate isAdmin function?
+    // TODO move to ngrx effect?
+    this.contractService.removeOrganizationAdmin(data.address, data.id);
   }
 
   ngOnDestroy() {

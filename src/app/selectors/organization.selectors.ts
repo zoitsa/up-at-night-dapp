@@ -9,3 +9,8 @@ export const selectOrganizationDetails = createSelector(
   selectOrganizationState,
   fromOrganization.myOrganization
 );
+
+export const selectAdminStatus = createSelector(
+  selectOrganizationState,
+  fromOrganization.isAdmin
+)
